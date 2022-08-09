@@ -2,65 +2,87 @@
 
 /**
  * print_int - print integer values
- *
  * @n: the integer to be printed
  *
  * Return: the length of the number
  */
 int print_int(va_list n)
 {
-	int len, num, mult, count;
-	unsigned int n_copy, x;
+	int num = va_arg(n, int), nn = 0, i = 1, d = 1, j;
+	unsigned int m = num;
+	unsigned int b = num;
 
-	num = va_arg(n, int);
-	mult = 1;
-	count = 1;
-
-	if (num < 0)
+	if (num >= 0 && num <= 9)
+		_putchar('0' + num);
+	else if (num < 0 && num >= -9)
 	{
+		num = -num;
+		i++;
 		_putchar('-');
-		x = num * -1;
-		n_copy = x;
+		_putchar('0' + num);
 	}
 	else
 	{
-		x = num;
-		n_copy = num;
-	}
-	while (n_copy >= 10)
-	{
-		n_copy /= 10;
-		mult *= 10;
-		count++;
-	}
-	if (num < 0)
-		len = count + 1;
-	while (count > 1)
-	{
-		if ((x / mult) < 10)
+		if (num <= -10)
 		{
-			_putchar((x / mult) + '0');
+			num = -num, nn = 1;
+			_putchar('-');
+			b = num;
+			m = num;
 		}
-		else
+		while (m >= 10)
 		{
-			_putchar(((x / mult) % 10) + '0');
+			m = m / 10;
+			i++;
 		}
-		count--;
-		mult /= 10;
+		for (j = i; j > 1; j--)
+			d = d * 10;
+		for (j = 1; j <= i; j++)
+		{
+			m = b / d;
+			b = b - (m * d);
+			d = d / 10;
+			_putchar('0' + m);
+		}
 	}
-	return (len);
+	if (nn == 1)
+		return (i + 1);
+	return (i);
 }
 
 /**
- * print_bin - prints a binary number
+ * print_bin - transform integer to binary
  *
- * @binum: the binary number
+ * @binum: number to print
  *
- * Return: length
+ * Return: length of the number
  */
 int print_bin(va_list binum)
 {
-	int num = va_arg(binum, int);
+	unsigned int n = va_arg(binum, int);
+	unsigned int y = n;
+	int r, i, j, len = 0;
+	char *ptr;
 
-	return (num);
+	if (n < 1)
+	{
+		_putchar('0' + 0);
+		return (1);
+	}
+	for (j = 0; y > 0; j++)
+		y = y / 2;
+	ptr = malloc(sizeof(char) * j);
+	if (ptr == NULL)
+		return (-1);
+	for (i = 0; n > 0; i++)
+	{
+		r = n % 2;
+		n = n / 2;
+		ptr[i] = r;
+		len++;
+	}
+	for (; i > 0; i--)
+		_putchar('0' + ptr[i - 1]);
+	free(ptr);
+	return (len);
 }

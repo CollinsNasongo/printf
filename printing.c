@@ -9,63 +9,44 @@
  */
 int _printf(const char *format, ...)
 {
-	int i = 0, j = 0, len = 0;
-	print_op print_ops[] = {
-		{"c", print_char},
-		{"s", print_str},
-		{"d", print_int},
-		{"i", print_int},
-		{"b", print_bin},
-		{NULL, NULL}
-	};
 	va_list args;
+	int (*fun)(va_list), len = 0, i;
 
+	if (format == NULL || (format[0] == '%' && format[1] == '\0'))
+		return (-1);
 	va_start(args, format);
 
-	if (format == NULL)
-		return (-1);
-	if (format != NULL)
+	for (i = 0; format[i] != '\0'; i++)
 	{
-		while (format[i] != '\0')
+		if (format[i] == '%')
 		{
-			if (format[i] == '%')
+			if (format[i + 1] != '%')
 			{
-				i++;
-
-				while (print_ops[j].symbol != NULL)
+				fun = get_fun(format[i + 1]);
+				if (fun == NULL)
 				{
-					while (format[i] == ' ')
-						i++;
-					if (*(print_ops[j].symbol) == format[i])
-					{
-						len += print_ops[j].print(args);
-						break;
-					}
-					if (format[i] == '%')
-					{
-						_putchar(format[i]);
-						len++;
-						break;
-					}
-					j++;
-					if (print_ops[j].symbol == NULL)
-					{
-						if (format[--i] == ' ')
-						{
-							_putchar('%');
-							_putchar(' ');
-							len += 2;
-						}
-					}
+					write(1, &format[i], 1);
+					len++;
+				}
+				else
+				{
+					len = len + fun(args);
+					i++;
 				}
 			}
 			else
 			{
-				_putchar(format[i]);
+				write(1, &format[i], 1);
 				len++;
+				i++;
 			}
-			i++;
+		}
+		else
+		{
+			write(1, &format[i], 1);
+			len++;
 		}
 	}
+	va_end(args);
 	return (len);
 }
