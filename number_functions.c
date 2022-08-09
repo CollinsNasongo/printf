@@ -3,7 +3,7 @@
 /**
  * print_int - print integer values
  *
- * @num: the integer to be printed
+ * @n: the integer to be printed
  *
  * Return: the length of the number
  */
@@ -51,8 +51,16 @@ int print_int(va_list n)
 	return (len);
 }
 
+/**
+ * print_bin - prints a binary number
+ *
+ * @binum: the binary number
+ *
+ * Return: length
+ */
 int print_bin(va_list binum)
 {
 	int num = va_arg(binum, int);
+
 	return (num);
 }
